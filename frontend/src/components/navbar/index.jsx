@@ -6,8 +6,16 @@ import NavList from "./navItems.jsx";
 
 const NavbarContainer = styled.div`
   ${tw`
-
-
+    flex
+    px-2
+    mx-2
+    py-2
+    mx-auto
+    max-w-3xl
+    justify-between
+    bg-yellow-400
+    rounded-3xl
+    shadow-2xl
     `};
 `;
 
