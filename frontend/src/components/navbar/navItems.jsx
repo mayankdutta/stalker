@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
+import { slide as Menu } from "react-burger-menu";
+import SCREENS from "../../responsive/index.jsx";
+import menuStyle from "./menuStyle.jsx";
+import { useMediaQuery } from "react-responsive";
 
 const List = styled.ul`
   ${tw`
@@ -19,23 +23,46 @@ const Items = styled.li`
     items-center
     `};
 `;
-
 const NavList = () => {
-  return (
-    <List>
-      <Items>
-        <a href="#"> Home</a>
-      </Items>
-      <Items>
-        <a href="#"> Compare </a>
-      </Items>
-      <Items>
-        <a href="#"> Virtual rating change</a>
-      </Items>
-      <Items>
-        <a href="#"> kuch kehna hai</a>
-      </Items>
-    </List>
-  );
+  const isMobile = useMediaQuery({ maxWidth: SCREENS.sm });
+  if (isMobile)
+    return (
+      <Menu right styles={menuStyle} width={"50%"}>
+        <List>
+          <Items>
+            <a href="#"> Home</a>
+          </Items>
+          <Items>
+            <a href="#"> Cars</a>
+          </Items>
+          <Items>
+            <a href="#"> Services</a>
+          </Items>
+          <Items>
+            <a href="#"> Contact</a>
+          </Items>
+        </List>
+      </Menu>
+    );
+  else
+    return (
+      <>
+        <List>
+          <Items>
+            <a href="#"> Home</a>
+          </Items>
+          <Items>
+            <a href="#"> Cars</a>
+          </Items>
+          <Items>
+            <a href="#"> Services</a>
+          </Items>
+          <Items>
+            <a href="#"> Contact</a>
+          </Items>
+        </List>
+      </>
+    );
 };
+
 export default NavList;

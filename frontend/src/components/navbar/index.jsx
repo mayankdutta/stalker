@@ -11,7 +11,7 @@ const NavbarContainer = styled.div`
     mx-2
     py-2
     mx-auto
-    max-w-3xl
+    max-w-7xl
     justify-between
     bg-yellow-400
     rounded-3xl
