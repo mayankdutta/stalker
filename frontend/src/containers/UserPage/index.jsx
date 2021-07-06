@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
-import { PieChart } from "react-minimal-pie-chart";
+import Chart from "./chart.jsx";
 
 const Content = styled.div`
   ${tw`
@@ -16,7 +16,10 @@ const Content = styled.div`
 
 const UserData = styled.div`
   ${tw`
-
+    h-1/2
+    w-1/2
+    flex
+    justify-center
   `};
 `;
 
@@ -36,7 +39,9 @@ const HomePage = () => {
           </button>
         </div>
       </Content>
-      <UserData></UserData>
+      <UserData>
+        <Chart />
+      </UserData>
     </>
   );
 };
