@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
-import Chart from "./chart.jsx";
+import Chart from "./barGraph.jsx";
+import PiChart from "./pi.jsx";
+import Donut from "./doughtnet.jsx";
 
-const Content = styled.div`
+const UserContent = styled.div`
   ${tw`
     w-screen
-    h-4/5
     flex
     justify-center
     items-start
@@ -16,17 +17,33 @@ const Content = styled.div`
 
 const UserData = styled.div`
   ${tw`
-    h-1/2
-    w-1/2
+    w-screen
+    h-screen
     flex
+    space-x-4
+    flex-wrap
     justify-center
+    items-center
   `};
+`;
+
+const Graph = styled.div`
+  ${tw`
+  w-1/2
+  h-1/2
+  `}
+`;
+
+const Pi = styled.div`
+  ${tw`
+
+  `}
 `;
 
 const HomePage = () => {
   return (
     <>
-      <Content>
+      <UserContent>
         <div className="flex flex-wrap space-x-4">
           <input
             type="text"
@@ -38,9 +55,17 @@ const HomePage = () => {
             Submit
           </button>
         </div>
-      </Content>
+      </UserContent>
       <UserData>
-        <Chart />
+        <Pi>
+          <PiChart />
+        </Pi>
+        <Pi>
+          <Donut />
+        </Pi>
+        <Graph>
+          <Chart />
+        </Graph>
       </UserData>
     </>
   );
