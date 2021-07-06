@@ -10,10 +10,14 @@ const NavbarContainer = styled.div`
     px-2
     mx-2
     py-2
+
+    relative
+    top-2
+
     mx-auto
     max-w-7xl
     justify-between
-    bg-yellow-400
+    bg-gray-400
     rounded-3xl
     shadow-2xl
     `};

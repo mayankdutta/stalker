@@ -33,13 +33,13 @@ const NavList = () => {
             <a href="#"> Home</a>
           </Items>
           <Items>
-            <a href="#"> Cars</a>
+            <a href="#"> Compare </a>
           </Items>
           <Items>
-            <a href="#"> Services</a>
+            <a href="#"> Virtual Rating</a>
           </Items>
           <Items>
-            <a href="#"> Contact</a>
+            <a href="#"> Kuch kehna hai</a>
           </Items>
         </List>
       </Menu>
@@ -52,13 +52,13 @@ const NavList = () => {
             <a href="#"> Home</a>
           </Items>
           <Items>
-            <a href="#"> Cars</a>
+            <a href="#"> Compare </a>
           </Items>
           <Items>
-            <a href="#"> Services</a>
+            <a href="#"> Virtual Rating</a>
           </Items>
           <Items>
-            <a href="#"> Contact</a>
+            <a href="#"> Kuch kehna hai </a>
           </Items>
         </List>
       </>
