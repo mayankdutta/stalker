@@ -3,6 +3,7 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import Chart from "./barGraph.jsx";
 import PiChart from "./pi.jsx";
+import UserTable from "./table.jsx";
 import Donut from "./doughtnet.jsx";
 import axios from "axios";
 
@@ -63,6 +64,7 @@ const HomePage = (props) => {
           setNewRating(newRating);
           setOldRating(oldRating);
         });
+        console.log(res.data.result);
         /* console.log("Rank: " + rank); */
         /* console.log("OldRating: " + oldRating); */
         /* console.log("NewRating: " + newRating); */
@@ -79,6 +81,12 @@ const HomePage = (props) => {
 
   return (
     <>
+      <UserTable
+        name={props.userName}
+        contestName={contestName}
+        newRating={newRating}
+        oldRating={oldRating}
+      />
       <UserData>
         <Pi>
           <PiChart />
