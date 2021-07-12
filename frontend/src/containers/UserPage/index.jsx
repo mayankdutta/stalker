@@ -40,7 +40,11 @@ const Content = styled.div`
 `;
 
 const HomePage = (props) => {
-  const [userData, setUserData] = useState([[]]);
+  const [rank, setRank] = useState([]);
+  const [oldRating, setOldRating] = useState([]);
+  const [newRating, setNewRating] = useState([]);
+  const [contestName, setContestName] = useState([]);
+
   const fetchData = () => {
     return axios
       .get(props.url)
@@ -48,16 +52,21 @@ const HomePage = (props) => {
         /* console.log(res.data.result); */
 
         Object.entries(res.data.result).forEach(([key, values]) => {
-          let object = new Array(1);
-          object[0] = new Array(1);
           Object.entries(values).forEach(([index, value]) => {
-            object[0].push([index, value]);
+            if (index == "rank") rank.push(value);
+            else if (index == "contestName") contestName.push(value);
+            else if (index == "newRating") newRating.push(value);
+            else if (index == "oldRating") oldRating.push(value);
           });
-          userData.push(object);
-          /* console.log("Object: " + object); */
-          setUserData(userData);
+          setRank(rank);
+          setContestName(contestName);
+          setNewRating(newRating);
+          setOldRating(oldRating);
         });
-        console.log(userData);
+        /* console.log("Rank: " + rank); */
+        /* console.log("OldRating: " + oldRating); */
+        /* console.log("NewRating: " + newRating); */
+        /* console.log("ContestName: " + contestName); */
       })
       .then({})
       .catch((err) => {
