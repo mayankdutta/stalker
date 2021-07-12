@@ -40,14 +40,26 @@ const Content = styled.div`
 `;
 
 const HomePage = (props) => {
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState([[]]);
   const fetchData = () => {
     return axios
       .get(props.url)
       .then((res) => {
-        console.log(res);
-        console.log(res.data.result);
+        /* console.log(res.data.result); */
+
+        Object.entries(res.data.result).forEach(([key, values]) => {
+          let object = new Array(1);
+          object[0] = new Array(1);
+          Object.entries(values).forEach(([index, value]) => {
+            object[0].push([index, value]);
+          });
+          userData.push(object);
+          /* console.log("Object: " + object); */
+          setUserData(userData);
+        });
+        console.log(userData);
       })
+      .then({})
       .catch((err) => {
         console.log(err);
       });
