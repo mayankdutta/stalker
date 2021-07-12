@@ -24,6 +24,13 @@ const Graph = styled.div`
   `}
 `;
 
+const Table = styled.div`
+  ${tw`
+flex
+justify-center
+`};
+`;
+
 const Pi = styled.div`
   ${tw`
 
@@ -45,6 +52,7 @@ const HomePage = (props) => {
   const [oldRating, setOldRating] = useState([]);
   const [newRating, setNewRating] = useState([]);
   const [contestName, setContestName] = useState([]);
+  const [renderNow, setRenderNow] = useState(false);
 
   const fetchData = () => {
     return axios
@@ -64,13 +72,13 @@ const HomePage = (props) => {
           setNewRating(newRating);
           setOldRating(oldRating);
         });
-        console.log(res.data.result);
+        /* console.log(res.data.result); */
         /* console.log("Rank: " + rank); */
         /* console.log("OldRating: " + oldRating); */
         /* console.log("NewRating: " + newRating); */
         /* console.log("ContestName: " + contestName); */
+        setRenderNow(true);
       })
-      .then({})
       .catch((err) => {
         console.log(err);
       });
@@ -81,23 +89,48 @@ const HomePage = (props) => {
 
   return (
     <>
-      <UserTable
-        name={props.userName}
-        contestName={contestName}
-        newRating={newRating}
-        oldRating={oldRating}
-      />
-      <UserData>
-        <Pi>
-          <PiChart />
-        </Pi>
-        <Pi>
-          <Donut />
-        </Pi>
-        <Graph>
-          <Chart />
-        </Graph>
-      </UserData>
+      {renderNow ? (
+        <>
+          <h1> {console.log(rank)}</h1>
+          <h1> {console.log(contestName)}</h1>
+          <h1> {console.log(oldRating)}</h1>
+          <h1> {console.log(newRating)}</h1>
+
+          <Table>
+            <UserTable
+              name={props.userName}
+              totalContest={contestName.length}
+              maxRating={Math.max(
+                oldRating.reduce((a, b) => {
+                  return Math.max(a, b);
+                }),
+                newRating.reduce((a, b) => {
+                  return Math.max(a, b);
+                })
+              )}
+              minRating={Math.min(
+                oldRating.reduce((a, b) => {
+                  return Math.min(a, b);
+                }),
+                newRating.reduce((a, b) => {
+                  return Math.min(a, b);
+                })
+              )}
+            />
+          </Table>
+          <UserData>
+            <Pi>
+              <PiChart />
+            </Pi>
+            <Pi>
+              <Donut />
+            </Pi>
+            <Graph>
+              <Chart />
+            </Graph>
+          </UserData>
+        </>
+      ) : null}
     </>
   );
 };

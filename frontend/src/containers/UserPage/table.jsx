@@ -5,43 +5,25 @@ import tw from "twin.macro";
 const UserTable = (props) => {
   console.log(props.newRating);
   return (
-    <table class="table-auto">
-      <thead>
-        <tr>
-          <th>Contets of </th>
-          <th>{props.name}</th>
+    <table className=" bg-gray-200 table-auto border-4 border-gray-800">
+      <thead className="">
+        <tr className="bg-gray-400">
+          <th className="p-2 ">Contets of </th>
+          <th className="p-2">{props.name}</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Number of Contests</td>
-          <td>{props.contestName.legnth}</td>
+        <tr className="border-b-2 border-t-2 border-gray-600">
+          <td className="p-2">Number of Contests</td>
+          <td className="p-2">{props.totalContest}</td>
         </tr>
-        <tr class="bg-emerald-200">
-          <td>Best Rank</td>
-          <td>
-            {Math.max(
-              props.newRating.reduce((a, b) => {
-                return Math.max(a, b);
-              }),
-              props.oldRating.reduce((a, b) => {
-                return Math.max(a, b);
-              })
-            )}
-          </td>
+        <tr className="border-b-2 border-gray-600">
+          <td className="p-2">Best Rank</td>
+          <td className="p-2">{props.maxRating}</td>
         </tr>
-        <tr>
-          <td>Worst Rank</td>
-          <td>
-            {Math.min(
-              props.newRating.reduce((a, b) => {
-                return Math.min(a, b);
-              }),
-              props.oldRating.reduce((a, b) => {
-                return Math.min(a, b);
-              })
-            )}
-          </td>
+        <tr className="border-b-2 border-gray-600">
+          <td className="p-2">Worst Rank</td>
+          <td className="p-2">{props.minRating}</td>
         </tr>
       </tbody>
     </table>
