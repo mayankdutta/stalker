@@ -25,6 +25,14 @@ const UserTable = (props) => {
           <td className="p-2">Worst Rank</td>
           <td className="p-2">{props.minRating}</td>
         </tr>
+        <tr className="border-b-2 border-gray-600">
+          <td className="p-2">Max Up</td>
+          <td className="p-2">{props.maxUp}</td>
+        </tr>
+        <tr className="border-b-2 border-gray-600">
+          <td className="p-2">Max Down</td>
+          <td className="p-2">{props.maxDown}</td>
+        </tr>
       </tbody>
     </table>
   );

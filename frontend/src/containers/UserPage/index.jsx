@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
-import Chart from "./barGraph.jsx";
-import PiChart from "./pi.jsx";
-import UserTable from "./table.jsx";
-import Donut from "./doughtnet.jsx";
+import Chart from "../../components/userData/barGraph.jsx";
+import PiChart from "../../components/userData/pi.jsx";
+import UserTable from "../../components/userData/table.jsx";
+import Donut from "../../components/userData/doughtnet.jsx";
 import axios from "axios";
 
 const UserData = styled.div`
@@ -53,6 +53,29 @@ const HomePage = (props) => {
   const [newRating, setNewRating] = useState([]);
   const [contestName, setContestName] = useState([]);
   const [renderNow, setRenderNow] = useState(false);
+  const [maxRating, setMaxRating] = useState(0);
+  const [minRating, setMinRating] = useState(0);
+  const [maxUp, setMaxUp] = useState(-10000000000000);
+  const [maxDown, setMaxDown] = useState(1000000000000);
+
+  const calculation = () => {
+    setMaxRating(
+      newRating.reduce((a, b) => {
+        return Math.max(a, b);
+      })
+    );
+
+    setMinRating(
+      newRating.reduce((a, b) => {
+        return Math.min(a, b);
+      })
+    );
+
+    for (let i = 1; i < newRating.length; i++) {
+      setMaxUp(Math.max(newRating[i] - oldRating[i]), maxUp);
+      setMaxDown(Math.min(newRating[i] - oldRating[i]), maxDown);
+    }
+  };
 
   const fetchData = () => {
     return axios
@@ -77,7 +100,10 @@ const HomePage = (props) => {
         /* console.log("OldRating: " + oldRating); */
         /* console.log("NewRating: " + newRating); */
         /* console.log("ContestName: " + contestName); */
+      })
+      .then(() => {
         setRenderNow(true);
+        calculation();
       })
       .catch((err) => {
         console.log(err);
@@ -100,22 +126,10 @@ const HomePage = (props) => {
             <UserTable
               name={props.userName}
               totalContest={contestName.length}
-              maxRating={Math.max(
-                oldRating.reduce((a, b) => {
-                  return Math.max(a, b);
-                }),
-                newRating.reduce((a, b) => {
-                  return Math.max(a, b);
-                })
-              )}
-              minRating={Math.min(
-                oldRating.reduce((a, b) => {
-                  return Math.min(a, b);
-                }),
-                newRating.reduce((a, b) => {
-                  return Math.min(a, b);
-                })
-              )}
+              maxRating={maxRating}
+              minRating={minRating}
+              maxUp={maxUp}
+              maxDown={maxDown}
             />
           </Table>
           <UserData>
@@ -130,7 +144,11 @@ const HomePage = (props) => {
             </Graph>
           </UserData>
         </>
-      ) : null}
+      ) : (
+        <UserData>
+          <h1> Ruko jra bhaisaab ... </h1>
+        </UserData>
+      )}
     </>
   );
 };
