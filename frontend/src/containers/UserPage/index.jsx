@@ -124,9 +124,21 @@ const HomePage = (props) => {
         type: key.problem.type,
       };
       userData.push(arr);
+      // console.log(typeof arr);
+      // for (let val in arr) {
+      //   console.log(val + " -> " + arr[val]);
+      // }
     });
 
     setUserData(userData);
+
+    // for (let i = 0; i < userData.length; i++) {
+    //   const arr = userData[i];
+    //   for (let val in arr) {
+    //     console.log(val + " -> " + arr[val]);
+    //   }
+    //   console.log("\n\n");
+    // }
 
     calculationUserRating();
     calculationUserStatus();
@@ -144,9 +156,7 @@ const HomePage = (props) => {
         </UserData>
       ) : (
         <>
-          {
-            // console.log(userData)
-          }
+          {}
           <Table>
             <UserTable
               name={props.userName}
