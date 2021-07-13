@@ -60,8 +60,17 @@ const HomePage = (props) => {
 
   const [programmingLanguages, setProgrammingLanguages] = useState([]);
   const [problemDetails, setproblemDetails] = useState([[]]);
+  const [tempData, setTempData] = useState({
+    contestId: 0,
+    index: "",
+    name: "",
+    rating: 0,
+    tags: [],
+    type: "",
+  });
+  const [userData, setUserData] = useState([]);
 
-  const calculation = () => {
+  const calculationUserRating = () => {
     setMaxRating(
       newRating.reduce((a, b) => {
         return Math.max(a, b);
@@ -79,6 +88,8 @@ const HomePage = (props) => {
       setMaxDown(Math.min(newRating[i] - oldRating[i]), maxDown);
     }
   };
+
+  const calculationUserStatus = () => {};
 
   const fetchData = async () => {
     const userRating = await axios(
@@ -101,45 +112,28 @@ const HomePage = (props) => {
       setOldRating(oldRating);
     });
 
-    let temp = [[]];
-    Object.entries(userStatus.data.result).forEach(([key, values]) => {
-      Object.entries(values).forEach(([index, value]) => {
-        if (index === "programmingLanguage") {
-          programmingLanguages.push(value);
-        } else if (index === "problem") {
-          Object.entries(value).forEach(([title, titleData]) => {
-            let tags = [];
-            tags.push(title);
-            if (title === "tags") {
-              Object.entries(titleData).forEach(([tagName, tagDesc]) => {
-                // console.log("tags -> " + tagDesc);
-                tags.push(tagDesc);
-              });
-            } else {
-              tags.push(title);
-              tags.push(titleData);
-              // console.log(title + " -> " + titleData);
-            }
-            temp.push(tags);
-          });
-        }
-      });
-      setProgrammingLanguages(programmingLanguages);
+    // console.log(userStatus.data.result);
+    await userStatus.data.result.map(async (key) => {
+      // console.log("key is : " + key);
+      const arr = {
+        contestId: key.problem.contestId,
+        index: key.problem.index,
+        name: key.problem.name,
+        rating: key.problem.rating,
+        tags: key.problem.tags,
+        type: key.problem.type,
+      };
+      userData.push(arr);
     });
 
-    setproblemDetails(temp);
-    // for (let i = 0; i < problemDetails.length; i++) {
-    //   for (let j = 0; j < problemDetails[i].length; j++) {
-    //     console.log(problemDetails[i][j]);
-    //   }
-    //   console.log("\n");
-    // }
+    setUserData(userData);
 
-    calculation();
+    calculationUserRating();
+    calculationUserStatus();
     setLoading(false);
   };
-  useEffect(() => {
-    fetchData();
+  useEffect(async () => {
+    await fetchData();
   }, []);
 
   return (
@@ -150,6 +144,9 @@ const HomePage = (props) => {
         </UserData>
       ) : (
         <>
+          {
+            // console.log(userData)
+          }
           <Table>
             <UserTable
               name={props.userName}
@@ -162,7 +159,7 @@ const HomePage = (props) => {
           </Table>
           <UserData>
             <Pi>
-              <PiChart />
+              <PiChart languageData={programmingLanguages} />
             </Pi>
             <Pi>
               <Donut />
