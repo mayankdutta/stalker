@@ -49,7 +49,7 @@ const HomePage = () => {
             />
             <input
               type="text"
-              placeholder="'codeforces\{userNamename}"
+              placeholder="handle Name"
               value={userName}
               className="border-4 border-transparent w-2/6 focus:outline-none  focus:border-gray-700 rounded-2xl p-1 border-gray-200"
               onChange={captureUserName}

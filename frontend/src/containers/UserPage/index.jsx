@@ -58,6 +58,9 @@ const HomePage = (props) => {
   const [maxUp, setMaxUp] = useState(-10000000000000);
   const [maxDown, setMaxDown] = useState(1000000000000);
 
+  const [programmingLanguages, setProgrammingLanguages] = useState([]);
+  const [problemDetails, setproblemDetails] = useState([[]]);
+
   const calculation = () => {
     setMaxRating(
       newRating.reduce((a, b) => {
@@ -87,16 +90,51 @@ const HomePage = (props) => {
 
     Object.entries(userRating.data.result).forEach(([key, values]) => {
       Object.entries(values).forEach(([index, value]) => {
-        if (index == "rank") rank.push(value);
-        else if (index == "contestName") contestName.push(value);
-        else if (index == "newRating") newRating.push(value);
-        else if (index == "oldRating") oldRating.push(value);
+        if (index === "rank") rank.push(value);
+        else if (index === "contestName") contestName.push(value);
+        else if (index === "newRating") newRating.push(value);
+        else if (index === "oldRating") oldRating.push(value);
       });
       setRank(rank);
       setContestName(contestName);
       setNewRating(newRating);
       setOldRating(oldRating);
     });
+
+    let temp = [[]];
+    Object.entries(userStatus.data.result).forEach(([key, values]) => {
+      Object.entries(values).forEach(([index, value]) => {
+        if (index === "programmingLanguage") {
+          programmingLanguages.push(value);
+        } else if (index === "problem") {
+          Object.entries(value).forEach(([title, titleData]) => {
+            let tags = [];
+            tags.push(title);
+            if (title === "tags") {
+              Object.entries(titleData).forEach(([tagName, tagDesc]) => {
+                // console.log("tags -> " + tagDesc);
+                tags.push(tagDesc);
+              });
+            } else {
+              tags.push(title);
+              tags.push(titleData);
+              // console.log(title + " -> " + titleData);
+            }
+            temp.push(tags);
+          });
+        }
+      });
+      setProgrammingLanguages(programmingLanguages);
+    });
+
+    setproblemDetails(temp);
+    // for (let i = 0; i < problemDetails.length; i++) {
+    //   for (let j = 0; j < problemDetails[i].length; j++) {
+    //     console.log(problemDetails[i][j]);
+    //   }
+    //   console.log("\n");
+    // }
+
     calculation();
     setLoading(false);
   };
