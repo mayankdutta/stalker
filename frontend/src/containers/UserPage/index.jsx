@@ -52,7 +52,7 @@ const HomePage = (props) => {
   const [oldRating, setOldRating] = useState([]);
   const [newRating, setNewRating] = useState([]);
   const [contestName, setContestName] = useState([]);
-  const [renderNow, setRenderNow] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [maxRating, setMaxRating] = useState(0);
   const [minRating, setMinRating] = useState(0);
   const [maxUp, setMaxUp] = useState(-10000000000000);
@@ -77,37 +77,28 @@ const HomePage = (props) => {
     }
   };
 
-  const fetchData = () => {
-    return axios
-      .get(props.url)
-      .then((res) => {
-        /* console.log(res.data.result); */
+  const fetchData = async () => {
+    const userRating = await axios(
+      `https://codeforces.com/api/user.rating?handle=${props.userName}`
+    );
+    const userStatus = await axios(
+      `https://codeforces.com/api/user.status?handle=${props.userName}`
+    );
 
-        Object.entries(res.data.result).forEach(([key, values]) => {
-          Object.entries(values).forEach(([index, value]) => {
-            if (index == "rank") rank.push(value);
-            else if (index == "contestName") contestName.push(value);
-            else if (index == "newRating") newRating.push(value);
-            else if (index == "oldRating") oldRating.push(value);
-          });
-          setRank(rank);
-          setContestName(contestName);
-          setNewRating(newRating);
-          setOldRating(oldRating);
-        });
-        /* console.log(res.data.result); */
-        /* console.log("Rank: " + rank); */
-        /* console.log("OldRating: " + oldRating); */
-        /* console.log("NewRating: " + newRating); */
-        /* console.log("ContestName: " + contestName); */
-      })
-      .then(() => {
-        setRenderNow(true);
-        calculation();
-      })
-      .catch((err) => {
-        console.log(err);
+    Object.entries(userRating.data.result).forEach(([key, values]) => {
+      Object.entries(values).forEach(([index, value]) => {
+        if (index == "rank") rank.push(value);
+        else if (index == "contestName") contestName.push(value);
+        else if (index == "newRating") newRating.push(value);
+        else if (index == "oldRating") oldRating.push(value);
       });
+      setRank(rank);
+      setContestName(contestName);
+      setNewRating(newRating);
+      setOldRating(oldRating);
+    });
+    calculation();
+    setLoading(false);
   };
   useEffect(() => {
     fetchData();
@@ -115,13 +106,12 @@ const HomePage = (props) => {
 
   return (
     <>
-      {renderNow ? (
+      {loading ? (
+        <UserData>
+          <h1> Ruko BHAISAAB </h1>
+        </UserData>
+      ) : (
         <>
-          <h1> {console.log(rank)}</h1>
-          <h1> {console.log(contestName)}</h1>
-          <h1> {console.log(oldRating)}</h1>
-          <h1> {console.log(newRating)}</h1>
-
           <Table>
             <UserTable
               name={props.userName}
@@ -144,10 +134,6 @@ const HomePage = (props) => {
             </Graph>
           </UserData>
         </>
-      ) : (
-        <UserData>
-          <h1> Ruko jra bhaisaab ... </h1>
-        </UserData>
       )}
     </>
   );

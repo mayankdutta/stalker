@@ -66,12 +66,9 @@ const HomePage = () => {
         <>
           <Content>
             <div className="flex flex-wrap space-x-4 w-screen justify-center">
-              <input
-                type="text"
-                placeholder="'codeforces\{handlename}"
-                value={userName}
-                className="border-4 border-transparent w-2/6 focus:outline-none  focus:border-gray-700 rounded-2xl p-1 border-gray-200"
-              />
+              <button className="border-4 border-transparent w-2/6 focus:outline-none  focus:border-gray-700 rounded-2xl p-1 border-gray-200">
+                {userName}
+              </button>
               <button
                 onClick={changeVisiblity}
                 className="rounded-full px-6 py-3 shadow-2xl p-2 bg-gray-500 hover:bg-red-700 text-white"
