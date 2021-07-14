@@ -58,17 +58,9 @@ const HomePage = (props) => {
   const [maxUp, setMaxUp] = useState(-10000000000000);
   const [maxDown, setMaxDown] = useState(1000000000000);
 
-  const [programmingLanguages, setProgrammingLanguages] = useState([]);
-  const [problemDetails, setproblemDetails] = useState([[]]);
-  const [tempData, setTempData] = useState({
-    contestId: 0,
-    index: "",
-    name: "",
-    rating: 0,
-    tags: [],
-    type: "",
-  });
   const [userData, setUserData] = useState([]);
+  const [language, setLanguage] = useState([]);
+  const [freqLanguage, setFreqLanguage] = useState([]);
 
   const calculationUserRating = () => {
     setMaxRating(
@@ -113,8 +105,17 @@ const HomePage = (props) => {
     });
 
     // console.log(userStatus.data.result);
+    const userLanguage = new Map();
+
     await userStatus.data.result.map(async (key) => {
-      // console.log("key is : " + key);
+      if (userLanguage[key.programmingLanguage]) {
+        userLanguage[key.programmingLanguage] += 1;
+      } else {
+        userLanguage[key.programmingLanguage] = 1;
+      }
+      // console.log(
+      //   key.programmingLanguage + " -> " + userLanguage[key.programmingLanguage]
+      // );
       const arr = {
         contestId: key.problem.contestId,
         index: key.problem.index,
@@ -130,8 +131,23 @@ const HomePage = (props) => {
       // }
     });
 
+    console.log(userLanguage);
+
+    // for - in for key value pair
+    for (let value in userLanguage) {
+      // console.log("value is : " + value + " and " + userLanguage[value]);
+      language.push(value);
+      freqLanguage.push(userLanguage[value]);
+    }
+    setLanguage(language);
+    setFreqLanguage(freqLanguage);
+
+    console.log(language);
+    console.log(freqLanguage);
+
     setUserData(userData);
 
+    // for data validation
     // for (let i = 0; i < userData.length; i++) {
     //   const arr = userData[i];
     //   for (let val in arr) {
@@ -169,7 +185,7 @@ const HomePage = (props) => {
           </Table>
           <UserData>
             <Pi>
-              <PiChart languageData={programmingLanguages} />
+              <PiChart xAxis={language} yAxis={freqLanguage} />
             </Pi>
             <Pi>
               <Donut />
