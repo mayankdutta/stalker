@@ -12,8 +12,10 @@ const UserData = styled.div`
   ${tw`
     flex
     my-4
+    py-4
     space-x-4
-    flex-wrap
+    flex-nowrap
+    flex-col
     justify-center
     items-center
     bg-gray-400
@@ -26,7 +28,7 @@ const UserData = styled.div`
 
 const Graph = styled.div`
   ${tw`
-  w-2/4
+  w-4/6
   h-4/5
   `}
 `;
@@ -39,7 +41,7 @@ justify-center
 `;
 const Pi = styled.div`
   ${tw`
-  w-1/4
+  w-3/6
   h-2/5
 
   `}

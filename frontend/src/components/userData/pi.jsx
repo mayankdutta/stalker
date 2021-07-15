@@ -12,6 +12,7 @@ const Data = (props) => {
           {
             data: props.yAxis,
             backgroundColor: Colors.pie.slice(0, props.xAxis.length + 1),
+            borderColor: "black",
             // backgroundColor: [
             //   "red",
             //   "green",
