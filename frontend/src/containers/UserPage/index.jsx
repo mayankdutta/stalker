@@ -63,10 +63,13 @@ const HomePage = (props) => {
   // user Status
   const [language, setLanguage] = useState([]);
   const [freqLanguage, setFreqLanguage] = useState([]);
+
   const [verdict, setVerdict] = useState([]);
   const [freqVerdict, setFreqVerdict] = useState([]);
+
   const [tags, setTags] = useState([]);
   const [freqTags, setFreqTags] = useState([]);
+
   const [problemRating, setProblemRating] = useState([]);
   const [freqProblemRating, setFreqProblemRating] = useState([]);
 
@@ -89,38 +92,39 @@ const HomePage = (props) => {
     }
   };
 
-  const calculationUserStatus = () => {};
-
-  const fetchData = async () => {
-    const userRating = await axios(
+  const fetchUserRating = async () => {
+    const data = await axios(
       `https://codeforces.com/api/user.rating?handle=${props.userName}`
     );
-
-    Object.entries(userRating.data.result).forEach(([key, values]) => {
-      Object.entries(values).forEach(([index, value]) => {
-        if (index === "rank") rank.push(value);
-        else if (index === "contestName") contestName.push(value);
-        else if (index === "newRating") newRating.push(value);
-        else if (index === "oldRating") oldRating.push(value);
-      });
-      setRank(rank);
-      setContestName(contestName);
-      setNewRating(newRating);
-      setOldRating(oldRating);
-    });
-
-    calculationUserRating();
+    return data;
   };
-
   const fetchUserStatus = async () => {
     const data = await axios(
       `https://codeforces.com/api/user.status?handle=${props.userName}`
     );
-    console.log("called");
     return data;
   };
   useEffect(async () => {
-    fetchData();
+    // fetchData();
+    fetchUserRating()
+      .then((data) => {
+        data.data.result.map((key) => {
+          for (let val in key) {
+            // console.log(val); console.log(key[val]);
+            if (val === "rank") rank.push(key[val]);
+            else if (val === "contestName") contestName.push(key[val]);
+            else if (val === "newRating") newRating.push(key[val]);
+            else if (val === "oldRating") oldRating.push(key[val]);
+          }
+        });
+        setRank(rank);
+        setContestName(contestName);
+        setNewRating(newRating);
+        setOldRating(oldRating);
+      })
+      .then(() => {
+        calculationUserRating();
+      });
     // const [x1, y1, x2, y2, tempData] = await fetchUserStatus();
     fetchUserStatus()
       .then((data) => {
