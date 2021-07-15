@@ -1,32 +1,8 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
+import Colors from "../../colorScheme/index.jsx";
 
 const Data = (props) => {
-  const colors = [
-    "#a94064",
-    "#f88379",
-    "#D4AF37",
-    "#eedc82",
-    "#922724",
-    "#6699cc",
-    "#808000",
-    "#228b22",
-    "#77dd77",
-    "#008080",
-    "#89CFF0",
-    "#4169e1",
-    "#800020",
-    "#b38b6d",
-    "#daa520",
-    "#e97451",
-    "#8a3324",
-    "#c2b280",
-    "#551a8b",
-    "#702963",
-    "#563c5c",
-    "#4B0082",
-    "#9966cc",
-  ];
   return (
     <Pie
       data={{
@@ -35,7 +11,7 @@ const Data = (props) => {
         datasets: [
           {
             data: props.yAxis,
-            backgroundColor: colors.slice(0, props.xAxis.length + 1),
+            backgroundColor: Colors.pie.slice(0, props.xAxis.length + 1),
             // backgroundColor: [
             //   "red",
             //   "green",

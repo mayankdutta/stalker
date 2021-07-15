@@ -3,15 +3,21 @@ import styled from "styled-components";
 import axios from "axios";
 import tw from "twin.macro";
 import UserPage from "../UserPage/index.jsx";
+import Colors from "../../colorScheme/index.jsx";
 
 const Content = styled.div`
   ${tw`
     w-screen
     h-2/5
+    my-4
     flex
     justify-center
     items-center
+    container
+    mx-auto
+    rounded-3xl
     `};
+  background-color: ${Colors.body};
 `;
 
 const HomePage = () => {

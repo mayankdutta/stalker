@@ -1,5 +1,6 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
+import Colors from "../../colorScheme/index.jsx";
 
 const Data = (props) => {
   return (
@@ -13,7 +14,7 @@ const Data = (props) => {
               label: "No. of Problems",
               // data: [100, 200, 300, 400, 500, 600],
               data: props.yAxis,
-              backgroundColor: "blue",
+              backgroundColor: Colors.graph,
               barThickness: 18,
             },
             // {

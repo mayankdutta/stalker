@@ -6,15 +6,22 @@ import PiChart from "../../components/userData/pi.jsx";
 import UserTable from "../../components/userData/table.jsx";
 import Donut from "../../components/userData/doughtnet.jsx";
 import axios from "axios";
+import Colors from "../../colorScheme/index.jsx";
 
 const UserData = styled.div`
   ${tw`
     flex
+    my-4
     space-x-4
     flex-wrap
     justify-center
     items-center
+    bg-gray-400
+    container
+    mx-auto
+    rounded-3xl
   `};
+  background-color: ${Colors.body};
 `;
 
 const Graph = styled.div`
@@ -260,7 +267,7 @@ const HomePage = (props) => {
         </UserData>
       ) : (
         <>
-          <Table>
+          <UserData>
             <UserTable
               name={props.userName}
               totalContest={contestName.length}
@@ -269,8 +276,6 @@ const HomePage = (props) => {
               maxUp={maxUp}
               maxDown={maxDown}
             />
-          </Table>
-          <UserData>
             <Pi>
               <PiChart xAxis={language} yAxis={freqLanguage} />
             </Pi>

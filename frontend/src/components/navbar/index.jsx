@@ -3,8 +3,10 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import Logo from "../logo/index.jsx";
 import NavList from "./navItems.jsx";
+import Colors from "../../colorScheme/index.jsx";
 
 const NavbarContainer = styled.div`
+  background-color: ${Colors.navbar};
   ${tw`
     flex
     px-2
@@ -17,7 +19,6 @@ const NavbarContainer = styled.div`
     mx-auto
     max-w-7xl
     justify-between
-    bg-gray-400
     rounded-3xl
     shadow-2xl
     `};
