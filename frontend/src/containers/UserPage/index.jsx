@@ -59,8 +59,14 @@ const HomePage = (props) => {
   const [maxDown, setMaxDown] = useState(1000000000000);
 
   const [userData, setUserData] = useState([]);
+
+  // user Status
   const [language, setLanguage] = useState([]);
   const [freqLanguage, setFreqLanguage] = useState([]);
+  const [verdict, setVerdict] = useState([]);
+  const [freqVerdict, setFreqVerdict] = useState([]);
+
+  const [tempData, setTempData] = useState([]);
 
   const calculationUserRating = () => {
     setMaxRating(
@@ -87,9 +93,6 @@ const HomePage = (props) => {
     const userRating = await axios(
       `https://codeforces.com/api/user.rating?handle=${props.userName}`
     );
-    const userStatus = await axios(
-      `https://codeforces.com/api/user.status?handle=${props.userName}`
-    );
 
     Object.entries(userRating.data.result).forEach(([key, values]) => {
       Object.entries(values).forEach(([index, value]) => {
@@ -104,64 +107,78 @@ const HomePage = (props) => {
       setOldRating(oldRating);
     });
 
-    // console.log(userStatus.data.result);
-    const userLanguage = new Map();
-
-    await userStatus.data.result.map(async (key) => {
-      if (userLanguage[key.programmingLanguage]) {
-        userLanguage[key.programmingLanguage] += 1;
-      } else {
-        userLanguage[key.programmingLanguage] = 1;
-      }
-      // console.log(
-      //   key.programmingLanguage + " -> " + userLanguage[key.programmingLanguage]
-      // );
-      const arr = {
-        contestId: key.problem.contestId,
-        index: key.problem.index,
-        name: key.problem.name,
-        rating: key.problem.rating,
-        tags: key.problem.tags,
-        type: key.problem.type,
-      };
-      userData.push(arr);
-      // console.log(typeof arr);
-      // for (let val in arr) {
-      //   console.log(val + " -> " + arr[val]);
-      // }
-    });
-
-    console.log(userLanguage);
-
-    // for - in for key value pair
-    for (let value in userLanguage) {
-      // console.log("value is : " + value + " and " + userLanguage[value]);
-      language.push(value);
-      freqLanguage.push(userLanguage[value]);
-    }
-    setLanguage(language);
-    setFreqLanguage(freqLanguage);
-
-    console.log(language);
-    console.log(freqLanguage);
-
-    setUserData(userData);
-
-    // for data validation
-    // for (let i = 0; i < userData.length; i++) {
-    //   const arr = userData[i];
-    //   for (let val in arr) {
-    //     console.log(val + " -> " + arr[val]);
-    //   }
-    //   console.log("\n\n");
-    // }
-
     calculationUserRating();
-    calculationUserStatus();
-    setLoading(false);
+  };
+
+  const fetchUserStatus = async () => {
+    const data = await axios(
+      `https://codeforces.com/api/user.status?handle=${props.userName}`
+    );
+    console.log("called");
+    return data;
   };
   useEffect(async () => {
-    await fetchData();
+    fetchData();
+    // const [x1, y1, x2, y2, tempData] = await fetchUserStatus();
+    fetchUserStatus()
+      .then((data) => {
+        const tempData = [];
+        const userLanguage = new Map();
+        const userVerdict = new Map();
+
+        data.data.result.map((key) => {
+          if (userVerdict[key.verdict]) {
+            userVerdict[key.verdict] += 1;
+          } else {
+            userVerdict[key.verdict] = 1;
+          }
+          if (key.verdict == "OK") {
+            if (userLanguage[key.programmingLanguage]) {
+              userLanguage[key.programmingLanguage] += 1;
+            } else {
+              userLanguage[key.programmingLanguage] = 1;
+            }
+          }
+          tempData.push(key);
+        });
+
+        // console.log(data); console.log(userLanguage); console.log(userVerdict);
+        const langName = [],
+          langFreq = [],
+          verdName = [],
+          verdFreq = [];
+
+        for (let val in userVerdict) {
+          verdName.push(val);
+          verdFreq.push(userVerdict[val]);
+        }
+
+        for (let val in userLanguage) {
+          langName.push(val);
+          langFreq.push(userLanguage[val]);
+        }
+        return [langName, langFreq, verdName, verdFreq, tempData];
+      })
+      .then(([x1, y1, x2, y2, tempData]) => {
+        setLanguage(x1);
+        setFreqLanguage(y1);
+        setVerdict(x2);
+        setFreqVerdict(y2);
+        setTempData(tempData);
+      });
+    // console.log("x1"); console.log(x1); console.log("y1"); console.log(y1);
+
+    // setLanguage(x1);
+    // setFreqLanguage(y1);
+    // setVerdict(x2);
+    // setFreqVerdict(y2);
+    // setTempData(tempData);
+    // });
+
+    // console.log("here"); console.log(language); console.log("there"); console.log(freqLanguage); console.log("hhere"); console.log(verdict); console.log("tthere"); console.log(freqVerdict); console.log([ verdict.length, language.length, freqLanguage.length, freqVerdict.length, ]);
+
+    // console.log(tempData);
+    setLoading(false);
   }, []);
 
   return (
@@ -172,7 +189,6 @@ const HomePage = (props) => {
         </UserData>
       ) : (
         <>
-          {}
           <Table>
             <UserTable
               name={props.userName}
@@ -186,6 +202,9 @@ const HomePage = (props) => {
           <UserData>
             <Pi>
               <PiChart xAxis={language} yAxis={freqLanguage} />
+            </Pi>
+            <Pi>
+              <PiChart xAxis={verdict} yAxis={freqVerdict} />
             </Pi>
             <Pi>
               <Donut />

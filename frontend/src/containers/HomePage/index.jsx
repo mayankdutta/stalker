@@ -15,7 +15,7 @@ const Content = styled.div`
 `;
 
 const HomePage = () => {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState("sharma_utkarsh");
   const [platformName, setPlatformName] = useState("codeforces");
   const [url, setUrl] = useState("");
   const [renderUserPage, setRenderUserPage] = useState(false);
