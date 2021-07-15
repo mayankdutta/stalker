@@ -30,7 +30,6 @@ flex
 justify-center
 `};
 `;
-
 const Pi = styled.div`
   ${tw`
   w-1/4
@@ -73,7 +72,7 @@ const HomePage = (props) => {
   const [problemRating, setProblemRating] = useState([]);
   const [freqProblemRating, setFreqProblemRating] = useState([]);
 
-  const calculationUserRating = () => {
+  const analyzeUserRating = () => {
     setMaxRating(
       newRating.reduce((a, b) => {
         return Math.max(a, b);
@@ -104,6 +103,82 @@ const HomePage = (props) => {
     );
     return data;
   };
+
+  const analyzeUserStatus = (data) => {
+    const userLanguage = new Map();
+    const userVerdict = new Map();
+    const userTags = new Map();
+    const userProblemRating = new Map();
+
+    data.data.result.map((key) => {
+      if (userVerdict[key.verdict]) {
+        userVerdict[key.verdict] += 1;
+      } else {
+        userVerdict[key.verdict] = 1;
+      }
+      if (key.verdict == "OK") {
+        if (userLanguage[key.programmingLanguage]) {
+          userLanguage[key.programmingLanguage] += 1;
+        } else {
+          userLanguage[key.programmingLanguage] = 1;
+        }
+        if (userProblemRating[key.problem.rating]) {
+          userProblemRating[key.problem.rating] += 1;
+        } else {
+          userProblemRating[key.problem.rating] = 1;
+        }
+        for (let tag of key.problem.tags) {
+          if (userTags[tag]) {
+            userTags[tag] += 1;
+          } else {
+            userTags[tag] = 1;
+          }
+        }
+      }
+    });
+
+    // console.log(data); console.log(userLanguage); console.log(userVerdict);
+    const langName = [],
+      langFreq = [],
+      verdName = [],
+      verdFreq = [],
+      tags = [],
+      tagsFreq = [],
+      problemRating = [],
+      problemRatingFreq = [];
+
+    for (let val in userVerdict) {
+      verdName.push(val);
+      verdFreq.push(userVerdict[val]);
+    }
+
+    for (let val in userLanguage) {
+      langName.push(val);
+      langFreq.push(userLanguage[val]);
+    }
+
+    for (let val in userTags) {
+      tags.push(val);
+      tagsFreq.push(userTags[val]);
+    }
+
+    for (let val in userProblemRating) {
+      problemRating.push(val);
+      problemRatingFreq.push(userProblemRating[val]);
+    }
+
+    return [
+      langName,
+      langFreq,
+      verdName,
+      verdFreq,
+      tags,
+      tagsFreq,
+      problemRating,
+      problemRatingFreq,
+    ];
+  };
+
   useEffect(async () => {
     // fetchData();
     fetchUserRating()
@@ -123,72 +198,21 @@ const HomePage = (props) => {
         setOldRating(oldRating);
       })
       .then(() => {
-        calculationUserRating();
+        analyzeUserRating();
       });
     // const [x1, y1, x2, y2, tempData] = await fetchUserStatus();
     fetchUserStatus()
       .then((data) => {
-        const userLanguage = new Map();
-        const userVerdict = new Map();
-        const userTags = new Map();
-        const userProblemRating = new Map();
-
-        data.data.result.map((key) => {
-          if (userVerdict[key.verdict]) {
-            userVerdict[key.verdict] += 1;
-          } else {
-            userVerdict[key.verdict] = 1;
-          }
-          if (key.verdict == "OK") {
-            if (userLanguage[key.programmingLanguage]) {
-              userLanguage[key.programmingLanguage] += 1;
-            } else {
-              userLanguage[key.programmingLanguage] = 1;
-            }
-            if (userProblemRating[key.problem.rating]) {
-              userProblemRating[key.problem.rating] += 1;
-            } else {
-              userProblemRating[key.problem.rating] = 1;
-            }
-            for (let tag of key.problem.tags) {
-              if (userTags[tag]) {
-                userTags[tag] += 1;
-              } else {
-                userTags[tag] = 1;
-              }
-            }
-          }
-        });
-
-        // console.log(data); console.log(userLanguage); console.log(userVerdict);
-        const langName = [],
-          langFreq = [],
-          verdName = [],
-          verdFreq = [],
-          tags = [],
-          tagsFreq = [],
-          problemRating = [],
-          problemRatingFreq = [];
-
-        for (let val in userVerdict) {
-          verdName.push(val);
-          verdFreq.push(userVerdict[val]);
-        }
-
-        for (let val in userLanguage) {
-          langName.push(val);
-          langFreq.push(userLanguage[val]);
-        }
-
-        for (let val in userTags) {
-          tags.push(val);
-          tagsFreq.push(userTags[val]);
-        }
-
-        for (let val in userProblemRating) {
-          problemRating.push(val);
-          problemRatingFreq.push(userProblemRating[val]);
-        }
+        const [
+          langName,
+          langFreq,
+          verdName,
+          verdFreq,
+          tags,
+          tagsFreq,
+          problemRating,
+          problemRatingFreq,
+        ] = analyzeUserStatus(data);
 
         return [
           langName,
@@ -213,6 +237,9 @@ const HomePage = (props) => {
 
         setProblemRating(x4);
         setFreqProblemRating(y4);
+      })
+      .then(() => {
+        setLoading(false);
       });
     // console.log("x1"); console.log(x1); console.log("y1"); console.log(y1);
 
@@ -223,8 +250,6 @@ const HomePage = (props) => {
     // });
 
     // console.log("here"); console.log(language); console.log("there"); console.log(freqLanguage); console.log("hhere"); console.log(verdict); console.log("tthere"); console.log(freqVerdict); console.log([ verdict.length, language.length, freqLanguage.length, freqVerdict.length, ]);
-
-    setLoading(false);
   }, []);
 
   return (
