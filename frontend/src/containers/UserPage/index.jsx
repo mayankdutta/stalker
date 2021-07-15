@@ -19,8 +19,8 @@ const UserData = styled.div`
 
 const Graph = styled.div`
   ${tw`
-  w-1/2
-  h-1/2
+  w-2/4
+  h-4/5
   `}
 `;
 
@@ -33,6 +33,8 @@ justify-center
 
 const Pi = styled.div`
   ${tw`
+  w-1/4
+  h-2/5
 
   `}
 `;
@@ -58,15 +60,15 @@ const HomePage = (props) => {
   const [maxUp, setMaxUp] = useState(-10000000000000);
   const [maxDown, setMaxDown] = useState(1000000000000);
 
-  const [userData, setUserData] = useState([]);
-
   // user Status
   const [language, setLanguage] = useState([]);
   const [freqLanguage, setFreqLanguage] = useState([]);
   const [verdict, setVerdict] = useState([]);
   const [freqVerdict, setFreqVerdict] = useState([]);
-
-  const [tempData, setTempData] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [freqTags, setFreqTags] = useState([]);
+  const [problemRating, setProblemRating] = useState([]);
+  const [freqProblemRating, setFreqProblemRating] = useState([]);
 
   const calculationUserRating = () => {
     setMaxRating(
@@ -122,9 +124,10 @@ const HomePage = (props) => {
     // const [x1, y1, x2, y2, tempData] = await fetchUserStatus();
     fetchUserStatus()
       .then((data) => {
-        const tempData = [];
         const userLanguage = new Map();
         const userVerdict = new Map();
+        const userTags = new Map();
+        const userProblemRating = new Map();
 
         data.data.result.map((key) => {
           if (userVerdict[key.verdict]) {
@@ -138,15 +141,30 @@ const HomePage = (props) => {
             } else {
               userLanguage[key.programmingLanguage] = 1;
             }
+            if (userProblemRating[key.problem.rating]) {
+              userProblemRating[key.problem.rating] += 1;
+            } else {
+              userProblemRating[key.problem.rating] = 1;
+            }
+            for (let tag of key.problem.tags) {
+              if (userTags[tag]) {
+                userTags[tag] += 1;
+              } else {
+                userTags[tag] = 1;
+              }
+            }
           }
-          tempData.push(key);
         });
 
         // console.log(data); console.log(userLanguage); console.log(userVerdict);
         const langName = [],
           langFreq = [],
           verdName = [],
-          verdFreq = [];
+          verdFreq = [],
+          tags = [],
+          tagsFreq = [],
+          problemRating = [],
+          problemRatingFreq = [];
 
         for (let val in userVerdict) {
           verdName.push(val);
@@ -157,14 +175,40 @@ const HomePage = (props) => {
           langName.push(val);
           langFreq.push(userLanguage[val]);
         }
-        return [langName, langFreq, verdName, verdFreq, tempData];
+
+        for (let val in userTags) {
+          tags.push(val);
+          tagsFreq.push(userTags[val]);
+        }
+
+        for (let val in userProblemRating) {
+          problemRating.push(val);
+          problemRatingFreq.push(userProblemRating[val]);
+        }
+
+        return [
+          langName,
+          langFreq,
+          verdName,
+          verdFreq,
+          tags,
+          tagsFreq,
+          problemRating,
+          problemRatingFreq,
+        ];
       })
-      .then(([x1, y1, x2, y2, tempData]) => {
+      .then(([x1, y1, x2, y2, x3, y3, x4, y4]) => {
         setLanguage(x1);
         setFreqLanguage(y1);
+
         setVerdict(x2);
         setFreqVerdict(y2);
-        setTempData(tempData);
+
+        setTags(x3);
+        setFreqTags(y3);
+
+        setProblemRating(x4);
+        setFreqProblemRating(y4);
       });
     // console.log("x1"); console.log(x1); console.log("y1"); console.log(y1);
 
@@ -172,12 +216,10 @@ const HomePage = (props) => {
     // setFreqLanguage(y1);
     // setVerdict(x2);
     // setFreqVerdict(y2);
-    // setTempData(tempData);
     // });
 
     // console.log("here"); console.log(language); console.log("there"); console.log(freqLanguage); console.log("hhere"); console.log(verdict); console.log("tthere"); console.log(freqVerdict); console.log([ verdict.length, language.length, freqLanguage.length, freqVerdict.length, ]);
 
-    // console.log(tempData);
     setLoading(false);
   }, []);
 
@@ -206,11 +248,11 @@ const HomePage = (props) => {
             <Pi>
               <PiChart xAxis={verdict} yAxis={freqVerdict} />
             </Pi>
-            <Pi>
-              <Donut />
-            </Pi>
             <Graph>
-              <Chart />
+              <Chart xAxis={tags} yAxis={freqTags} />
+            </Graph>
+            <Graph>
+              <Chart xAxis={problemRating} yAxis={freqProblemRating} />
             </Graph>
           </UserData>
         </>
