@@ -4,6 +4,7 @@ import tw from "twin.macro";
 import Chart from "../../components/userData/barGraph.jsx";
 import PiChart from "../../components/userData/pi.jsx";
 import UserTable from "../../components/userData/table.jsx";
+import UserStatusTable from "../../components/userData/userStatusTable.jsx";
 import Donut from "../../components/userData/doughtnet.jsx";
 import axios from "axios";
 import Colors from "../../colorScheme/index.jsx";
@@ -68,6 +69,8 @@ const HomePage = (props) => {
   const [minRating, setMinRating] = useState(0);
   const [maxUp, setMaxUp] = useState(-10000000000000);
   const [maxDown, setMaxDown] = useState(1000000000000);
+  const [tried, setTried] = useState(0);
+  const [solved, setSolved] = useState(0);
 
   // user Status
   const [language, setLanguage] = useState([]);
@@ -101,14 +104,14 @@ const HomePage = (props) => {
     }
   };
 
-  const fetchUserRating = async () => {
-    const data = await axios(
+  const fetchUserRating = () => {
+    const data = axios(
       `https://codeforces.com/api/user.rating?handle=${props.userName}`
     );
     return data;
   };
-  const fetchUserStatus = async () => {
-    const data = await axios(
+  const fetchUserStatus = () => {
+    const data = axios(
       `https://codeforces.com/api/user.status?handle=${props.userName}`
     );
     return data;
@@ -157,6 +160,7 @@ const HomePage = (props) => {
       problemRating = [],
       problemRatingFreq = [];
 
+    console.log(userVerdict);
     for (let val in userVerdict) {
       verdName.push(val);
       verdFreq.push(userVerdict[val]);
@@ -189,7 +193,7 @@ const HomePage = (props) => {
     ];
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     fetchUserRating()
       .then((data) => {
         data.data.result.map((key) => {
@@ -246,8 +250,13 @@ const HomePage = (props) => {
 
         setProblemRating(x4);
         setFreqProblemRating(y4);
+
+        setTried(verdict.size);
+        setSolved(verdict["OK"]);
       })
       .then(() => {
+        console.log(tried);
+        console.log(solved);
         setLoading(false);
       });
     // console.log("x1"); console.log(x1); console.log("y1"); console.log(y1);
@@ -271,14 +280,24 @@ const HomePage = (props) => {
       ) : (
         <>
           <UserData>
-            <UserTable
-              name={props.userName}
-              totalContest={contestName.length}
-              maxRating={maxRating}
-              minRating={minRating}
-              maxUp={maxUp}
-              maxDown={maxDown}
-            />
+            <div className="flex space-x-4">
+              <UserTable
+                name={props.userName}
+                totalContest={contestName.length}
+                maxRating={maxRating}
+                minRating={minRating}
+                maxUp={maxUp}
+                maxDown={maxDown}
+              />
+              <UserStatusTable
+                name={props.userName}
+                tried={tried}
+                solved={solved}
+                maxRating={maxRating}
+                minRating={minRating}
+                maxUp={maxUp}
+              />
+            </div>
             <Pi>
               <PiChart xAxis={language} yAxis={freqLanguage} />
             </Pi>
