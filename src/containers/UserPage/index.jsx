@@ -41,7 +41,7 @@ justify-center
 `;
 const Pi = styled.div`
   ${tw`
-  w-3/6
+  w-2/5
   h-2/5
 
   `}

@@ -15,7 +15,8 @@ const Data = (props) => {
               // data: [100, 200, 300, 400, 500, 600],
               data: props.yAxis,
               backgroundColor: Colors.graph,
-              barThickness: 18,
+              barThickness: 14,
+              borderWidth: 2,
             },
             // {
             //   label: "Store 2",
