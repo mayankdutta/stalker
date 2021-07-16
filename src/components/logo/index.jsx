@@ -30,7 +30,10 @@ const Logo = () => {
   return (
     <LogoContainer>
       <ImageContainer>
-        <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fanimevn247.com%2Fwp-content%2Fuploads%2F2021%2F03%2Fthumbnail-768x403.png&f=1&nofb=1" />
+        <img
+          src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fanimevn247.com%2Fwp-content%2Fuploads%2F2021%2F03%2Fthumbnail-768x403.png&f=1&nofb=1"
+          className="rounded-xl"
+        />
       </ImageContainer>
       <LogoText>Stalker</LogoText>
     </LogoContainer>

@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import tw from "twin.macro";
 import UserPage from "../UserPage/index.jsx";
 import Colors from "../../colorScheme/index.jsx";
 import Comparitor from "../ComparitorPage/index.jsx";
+import GIF from "../../gif/LD1.gif";
 
 const Content = styled.div`
   ${tw`
     w-screen
-    h-2/5
-    my-4
+    h-auto
+    py-2
+    my-8
     flex
     justify-center
     items-center
@@ -73,6 +74,7 @@ const HomePage = () => {
         <>
           <Content>
             <div className="flex flex-nowrap flex-col space-y-4 w-screen items-center">
+              <img src={GIF} className="rounded-full relative" />
               <input
                 type="text"
                 placeholder="platform name"

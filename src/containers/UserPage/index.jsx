@@ -7,6 +7,7 @@ import UserTable from "../../components/userData/table.jsx";
 import Donut from "../../components/userData/doughtnet.jsx";
 import axios from "axios";
 import Colors from "../../colorScheme/index.jsx";
+import WaitGIF from "../../gif/waiting.gif";
 
 const UserData = styled.div`
   ${tw`
@@ -189,7 +190,6 @@ const HomePage = (props) => {
   };
 
   useEffect(async () => {
-    // fetchData();
     fetchUserRating()
       .then((data) => {
         data.data.result.map((key) => {
@@ -266,6 +266,7 @@ const HomePage = (props) => {
       {loading ? (
         <UserData>
           <h1> Ruko BHAISAAB </h1>
+          <img src={WaitGIF} />
         </UserData>
       ) : (
         <>

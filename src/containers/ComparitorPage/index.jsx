@@ -4,7 +4,7 @@ import axios from "axios";
 import tw from "twin.macro";
 import UserPage from "../UserPage/index.jsx";
 import Colors from "../../colorScheme/index.jsx";
-import UnderConstruction from "../../gif/Untitled.mp4";
+import UnderConstructionGIF from "../../gif/Untitled.gif";
 
 const MainPage = styled.div`
   ${tw`
@@ -24,10 +24,24 @@ const MainPage = styled.div`
   background-color: ${Colors.body};
 `;
 
+const analyzeUserStatus = (data) => {};
+const fetchUserStatus = () => {};
 const Comparitor = (props) => {
+  useEffect(() => {
+    fetchUserStatus()
+      .then((data) => {
+        const [] = analyzeUserStatus(data);
+
+        return [];
+      })
+      .then(([]) => {})
+      .then(() => {
+        // setLoading(false);
+      });
+  }, []);
   return (
     <MainPage>
-      <video src={UnderConstruction} width="350" height="250" controls></video>
+      <img src={UnderConstructionGIF} className="rounded-3xl" />
     </MainPage>
   );
 };
