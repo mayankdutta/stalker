@@ -1,68 +1,9 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
-import Chart from "../../components/userData/barGraph.jsx";
-import PiChart from "../../components/userData/pi.jsx";
-import UserTable from "../../components/userData/table.jsx";
-import UserStatusTable from "../../components/userData/userStatusTable.jsx";
-import Donut from "../../components/userData/doughtnet.jsx";
+import React, { useEffect, useState, useContext } from "react";
+import UserPage from "../containers/UserPage/index.jsx";
 import axios from "axios";
-import Colors from "../../colorScheme/index.jsx";
-import WaitGIF from "../../gif/waiting.gif";
 
-import DataAnalyzer from "../../calculation/index.jsx";
-import { AuthContext } from "../../calculation/index.jsx";
-
-const UserData = styled.div`
-  ${tw`
-    flex
-    my-4
-    py-4
-    space-x-4
-    flex-nowrap
-    flex-col
-    justify-center
-    items-center
-    bg-gray-400
-    container
-    mx-auto
-    rounded-3xl
-  `};
-  background-color: ${Colors.body};
-`;
-
-const Graph = styled.div`
-  ${tw`
-  w-4/6
-  h-4/5
-  `}
-`;
-
-const Table = styled.div`
-  ${tw`
-flex
-justify-center
-`};
-`;
-const Pi = styled.div`
-  ${tw`
-  w-2/5
-  h-2/5
-
-  `}
-`;
-
-const Content = styled.div`
-  ${tw`
-    w-screen
-    h-2/5
-    flex
-    justify-center
-    items-center
-    `};
-`;
-
-const HomePage = (props) => {
+const AuthContext = React.createContext(); // added this
+const Data = (props) => {
   const [rank, setRank] = useState([]);
   const [oldRating, setOldRating] = useState([]);
   const [newRating, setNewRating] = useState([]);
@@ -93,8 +34,6 @@ const HomePage = (props) => {
 
   const [solve, setSolve] = useState([]);
   const [freqSolve, setFreqsolve] = useState([]);
-
-  const [loading, setLoading] = useState(true);
 
   const analyzeUserRating = () => {
     setMaxRating(
@@ -128,17 +67,6 @@ const HomePage = (props) => {
     return data;
   };
 
-  const mapToArray = (userMap, userArr, userArrFreq) => {
-    for (let val in userMap) {
-      userArr.push(val);
-      userArrFreq.push(userMap[val]);
-    }
-  };
-
-  const fillInMap = (userMap, value) => {
-    userMap[value] ? (userMap[value] += 1) : (userMap[value] = 1);
-  };
-
   const analyzeUserStatus = (data) => {
     const userLanguage = new Map();
     const userVerdict = new Map();
@@ -149,23 +77,48 @@ const HomePage = (props) => {
     const userSolvedProblem = new Map();
 
     data.data.result.map((key) => {
-      fillInMap(userVerdict, key.verdict);
-      fillInMap(userAttemptedProblem, key.problem.name);
+      if (userVerdict[key.verdict]) {
+        userVerdict[key.verdict] += 1;
+      } else {
+        userVerdict[key.verdict] = 1;
+      }
+      if (userAttemptedProblem[key.problem.name]) {
+        userAttemptedProblem[key.problem.name] += 1;
+      } else {
+        userAttemptedProblem[key.problem.name] = 1;
+      }
       if (key.verdict == "OK") {
-        fillInMap(userSolvedProblem, key.problem.name);
-        fillInMap(userLanguage, key.programmingLanguage);
-        fillInMap(userProblemRating, key.problem.rating);
-        fillInMap(userProblemLevel, key.problem.index);
+        if (userSolvedProblem[key.problem.name]) {
+          userSolvedProblem[key.problem.name] += 1;
+        } else {
+          userSolvedProblem[key.problem.name] = 1;
+        }
+        if (userLanguage[key.programmingLanguage]) {
+          userLanguage[key.programmingLanguage] += 1;
+        } else {
+          userLanguage[key.programmingLanguage] = 1;
+        }
+        if (userProblemRating[key.problem.rating]) {
+          userProblemRating[key.problem.rating] += 1;
+        } else {
+          userProblemRating[key.problem.rating] = 1;
+        }
+        if (userProblemRating[key.problem.index]) {
+          userProblemRating[key.problem.rating] += 1;
+        } else {
+          userProblemRating[key.problem.rating] = 1;
+        }
         for (let tag of key.problem.tags) {
-          fillInMap(userTags, tag);
+          if (userTags[tag]) {
+            userTags[tag] += 1;
+          } else {
+            userTags[tag] = 1;
+          }
         }
       }
     });
 
-    // TODO userProblem rating not working
-    // console.log(userProblemRating);
-    // console.log(userProblemLevel);
-
+    // console.log(data); console.log(userLanguage); console.log(userVerdict);
     const langName = [],
       langFreq = [],
       verdName = [],
@@ -181,13 +134,41 @@ const HomePage = (props) => {
       solved = [],
       solvedFreq = [];
 
-    mapToArray(userVerdict, verdName, verdFreq);
-    mapToArray(userLanguage, langName, langFreq);
-    mapToArray(userTags, tags, tagsFreq);
-    mapToArray(userProblemRating, problemRating, problemRatingFreq);
-    mapToArray(userProblemLevel, problemLevel, problemLevelFreq);
-    mapToArray(userAttemptedProblem, tried, triedFreq);
-    mapToArray(userSolvedProblem, solved, solvedFreq);
+    // console.log(userVerdict);
+    for (let val in userVerdict) {
+      verdName.push(val);
+      verdFreq.push(userVerdict[val]);
+    }
+
+    for (let val in userLanguage) {
+      langName.push(val);
+      langFreq.push(userLanguage[val]);
+    }
+
+    for (let val in userTags) {
+      tags.push(val);
+      tagsFreq.push(userTags[val]);
+    }
+
+    for (let val in userProblemRating) {
+      problemRating.push(val);
+      problemRatingFreq.push(userProblemRating[val]);
+    }
+
+    for (let val in userProblemLevel) {
+      problemLevel.push(val);
+      problemLevelFreq.push(userProblemLevel[val]);
+    }
+
+    for (let val in userAttemptedProblem) {
+      tried.push(val);
+      triedFreq.push(userAttemptedProblem[val]);
+    }
+
+    for (let val in userSolvedProblem) {
+      solved.push(val);
+      solvedFreq.push(userSolvedProblem[val]);
+    }
 
     return [
       langName,
@@ -230,7 +211,39 @@ const HomePage = (props) => {
     // const [x1, y1, x2, y2, tempData] = await fetchUserStatus();
     fetchUserStatus()
       .then((data) => {
-        return analyzeUserStatus(data);
+        const [
+          langName,
+          langFreq,
+          verdName,
+          verdFreq,
+          tags,
+          tagsFreq,
+          problemRating,
+          problemRatingFreq,
+          problemLevel,
+          problemLevelFreq,
+          tried,
+          triedFreq,
+          solved,
+          solvedFreq,
+        ] = analyzeUserStatus(data);
+
+        return [
+          langName, // x1
+          langFreq, // y2
+          verdName, // x2
+          verdFreq, // y2
+          tags, // x3
+          tagsFreq, // y3
+          problemRating, // x4
+          problemRatingFreq, // y4
+          problemLevel, // x5
+          problemLevelFreq, // y5
+          tried, // x6
+          triedFreq, // y6
+          solved, // x7
+          solvedFreq, // y7
+        ];
       })
       .then(
         ([
@@ -271,56 +284,32 @@ const HomePage = (props) => {
           setFreqsolve(solvedFreq);
         }
       )
-      .then(() => {
-        setLoading(false);
-      });
+      .then(() => {});
   }, []);
 
   return (
     <>
-      {loading ? (
-        <UserData>
-          <h1> Ruko BHAISAAB </h1>
-          <img src={WaitGIF} />
-        </UserData>
-      ) : (
-        <>
-          <UserData>
-            <div className="flex space-x-4">
-              <UserTable
-                name={props.userName}
-                totalContest={contestName.length}
-                maxRating={maxRating}
-                minRating={minRating}
-                maxUp={maxUp}
-                maxDown={maxDown}
-              />
-              <UserStatusTable
-                name={props.userName}
-                tried={attempt.length}
-                solved={solve.length}
-                maxRating={maxRating}
-                minRating={minRating}
-                maxUp={maxUp}
-              />
-            </div>
-            <Pi>
-              <PiChart xAxis={language} yAxis={freqLanguage} />
-            </Pi>
-            <Pi>
-              <PiChart xAxis={verdict} yAxis={freqVerdict} />
-            </Pi>
-            <Graph>
-              <Chart xAxis={tags} yAxis={freqTags} />
-            </Graph>
-            <Graph>
-              <Chart xAxis={problemRating} yAxis={freqProblemRating} />
-            </Graph>
-          </UserData>
-        </>
-      )}
+      <AuthContext.Provider value={4}>
+        <UserPage />
+      </AuthContext.Provider>
+      <UserPage />
     </>
   );
 };
 
-export default HomePage;
+export default Data;
+export { AuthContext };
+// export { language };
+// export { freqLanguage };
+// export { verdict };
+// export { freqVerdict };
+// export { tags };
+// export { freqTags };
+// export { problemRating };
+// export { freqProblemRating };
+// export { problemLevel };
+// export { freqProblemLevel };
+// export { attempt };
+// export { freqAttempt };
+// export { solve };
+// export { freqSolve };
