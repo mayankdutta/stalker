@@ -128,15 +128,15 @@ const HomePage = (props) => {
     return data;
   };
 
+  const fillInMap = (userMap, value) => {
+    userMap[value] ? (userMap[value] += 1) : (userMap[value] = 1);
+  };
+
   const mapToArray = (userMap, userArr, userArrFreq) => {
     for (let val in userMap) {
       userArr.push(val);
       userArrFreq.push(userMap[val]);
     }
-  };
-
-  const fillInMap = (userMap, value) => {
-    userMap[value] ? (userMap[value] += 1) : (userMap[value] = 1);
   };
 
   const analyzeUserStatus = (data) => {
@@ -161,10 +161,6 @@ const HomePage = (props) => {
         }
       }
     });
-
-    // TODO userProblem rating not working
-    // console.log(userProblemRating);
-    // console.log(userProblemLevel);
 
     const langName = [],
       langFreq = [],
@@ -315,6 +311,9 @@ const HomePage = (props) => {
             </Graph>
             <Graph>
               <Chart xAxis={problemRating} yAxis={freqProblemRating} />
+            </Graph>
+            <Graph>
+              <Chart xAxis={problemLevel} yAxis={freqProblemLevel} />
             </Graph>
           </UserData>
         </>
