@@ -27,18 +27,6 @@ const MainPage = styled.div`
 const analyzeUserStatus = (data) => {};
 const fetchUserStatus = () => {};
 const Comparitor = (props) => {
-  useEffect(() => {
-    fetchUserStatus()
-      .then((data) => {
-        const [] = analyzeUserStatus(data);
-
-        return [];
-      })
-      .then(([]) => {})
-      .then(() => {
-        // setLoading(false);
-      });
-  }, []);
   return (
     <MainPage>
       <img src={UnderConstructionGIF} className="rounded-3xl" />

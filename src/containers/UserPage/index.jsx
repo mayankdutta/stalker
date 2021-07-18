@@ -317,6 +317,7 @@ const HomePage = (props) => {
             <Graph>
               <Chart xAxis={problemLevel} yAxis={freqProblemLevel} />
             </Graph>
+            // TODO make this into table
             <Graph>
               <LineChart xAxis={contestName} yAxis={newRating} />
             </Graph>
