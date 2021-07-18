@@ -15,8 +15,9 @@ const Data = (props) => {
               // data: [100, 200, 300, 400, 500, 600],
               data: props.yAxis,
               backgroundColor: Colors.graph,
-              barThickness: 14,
-              borderWidth: 2,
+              // barThickness: 40,
+              // borderWidth: 6,
+              borderColor: "black",
             },
             // {
             //   label: "Store 2",
@@ -39,6 +40,14 @@ const Data = (props) => {
           ],
         }}
         options={{
+          layout: {
+            padding: {
+              left: 0,
+              right: 0,
+              bottom: 40,
+              top: 40,
+            },
+          },
           tooltips: {
             callbacks: {
               label: function (toolTipItem) {

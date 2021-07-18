@@ -2,16 +2,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import Chart from "../../components/userData/barGraph.jsx";
+import LineChart from "../../components/userData/lineChart.jsx";
 import PiChart from "../../components/userData/pi.jsx";
 import UserTable from "../../components/userData/table.jsx";
 import UserStatusTable from "../../components/userData/userStatusTable.jsx";
-import Donut from "../../components/userData/doughtnet.jsx";
 import axios from "axios";
 import Colors from "../../colorScheme/index.jsx";
 import WaitGIF from "../../gif/waiting.gif";
-
-import DataAnalyzer from "../../calculation/index.jsx";
-import { AuthContext } from "../../calculation/index.jsx";
 
 const UserData = styled.div`
   ${tw`
@@ -33,13 +30,14 @@ const UserData = styled.div`
 
 const Graph = styled.div`
   ${tw`
-  w-4/6
-  h-4/5
+  h-full 
+  w-10/12
   `}
 `;
 
 const Table = styled.div`
   ${tw`
+py-8
 flex
 justify-center
 `};
@@ -69,51 +67,27 @@ const HomePage = (props) => {
   const [contestName, setContestName] = useState([]);
   const [maxRating, setMaxRating] = useState(0);
   const [minRating, setMinRating] = useState(0);
-  const [maxUp, setMaxUp] = useState(-10000000000000);
-  const [maxDown, setMaxDown] = useState(1000000000000);
+  const [maxUp, setMaxUp] = useState();
+  const [maxDown, setMaxDown] = useState();
 
   // user Status
   const [language, setLanguage] = useState([]);
-  const [freqLanguage, setFreqLanguage] = useState([]);
-
   const [verdict, setVerdict] = useState([]);
-  const [freqVerdict, setFreqVerdict] = useState([]);
-
   const [tags, setTags] = useState([]);
-  const [freqTags, setFreqTags] = useState([]);
-
   const [problemRating, setProblemRating] = useState([]);
-  const [freqProblemRating, setFreqProblemRating] = useState([]);
-
   const [problemLevel, setProblemLevel] = useState([]);
-  const [freqProblemLevel, setFreqProblemLevel] = useState([]);
-
   const [attempt, setAttempt] = useState([]);
-  const [freqAttempt, setFreqAttempt] = useState([]);
-
   const [solve, setSolve] = useState([]);
+
+  const [freqLanguage, setFreqLanguage] = useState([]);
+  const [freqVerdict, setFreqVerdict] = useState([]);
+  const [freqTags, setFreqTags] = useState([]);
+  const [freqProblemRating, setFreqProblemRating] = useState([]);
+  const [freqProblemLevel, setFreqProblemLevel] = useState([]);
+  const [freqAttempt, setFreqAttempt] = useState([]);
   const [freqSolve, setFreqsolve] = useState([]);
 
   const [loading, setLoading] = useState(true);
-
-  const analyzeUserRating = () => {
-    setMaxRating(
-      newRating.reduce((a, b) => {
-        return Math.max(a, b);
-      })
-    );
-
-    setMinRating(
-      newRating.reduce((a, b) => {
-        return Math.min(a, b);
-      })
-    );
-
-    for (let i = 1; i < newRating.length; i++) {
-      setMaxUp(Math.max(newRating[i] - oldRating[i]), maxUp);
-      setMaxDown(Math.min(newRating[i] - oldRating[i]), maxDown);
-    }
-  };
 
   const fetchUserRating = () => {
     const data = axios(
@@ -203,27 +177,56 @@ const HomePage = (props) => {
     ];
   };
 
+  const analyzeUserRating = (data) => {
+    let arrRank = [],
+      arrContestName = [],
+      arrNewRating = [],
+      arrOldRating = [];
+
+    data.data.result.map((key) => {
+      for (let val in key) {
+        if (val === "rank") arrRank.push(key[val]);
+        else if (val === "contestName") arrContestName.push(key[val]);
+        else if (val === "newRating") arrNewRating.push(key[val]);
+        else if (val === "oldRating") arrOldRating.push(key[val]);
+      }
+    });
+    let mx = 0;
+    let mn = 1000000000;
+    for (let i = 1; i < arrNewRating.length; i++) {
+      console.log(arrNewRating[i] - arrOldRating[i]);
+      mx = Math.max(arrNewRating[i] - arrOldRating[i], mx);
+      mn = Math.min(arrNewRating[i] - arrOldRating[i], mn);
+    }
+    return [arrRank, arrContestName, arrNewRating, arrOldRating, mx, mn];
+  };
+
   useEffect(() => {
     fetchUserRating()
       .then((data) => {
-        data.data.result.map((key) => {
-          for (let val in key) {
-            // console.log(val); console.log(key[val]);
-            if (val === "rank") rank.push(key[val]);
-            else if (val === "contestName") contestName.push(key[val]);
-            else if (val === "newRating") newRating.push(key[val]);
-            else if (val === "oldRating") oldRating.push(key[val]);
-          }
-        });
-        setRank(rank);
-        setContestName(contestName);
-        setNewRating(newRating);
-        setOldRating(oldRating);
+        return analyzeUserRating(data);
       })
-      .then(() => {
-        analyzeUserRating();
+      .then(([arrRank, arrContestName, arrNewRating, arrOldRating, mx, mn]) => {
+        setMaxRating(
+          arrNewRating.reduce((a, b) => {
+            return Math.max(a, b);
+          })
+        );
+
+        setMinRating(
+          arrNewRating.reduce((a, b) => {
+            return Math.min(a, b);
+          })
+        );
+
+        setRank(arrRank);
+        setContestName(arrContestName);
+        setNewRating(arrNewRating);
+        setOldRating(arrOldRating);
+        setMaxDown(mn);
+        setMaxUp(mx);
       });
-    // const [x1, y1, x2, y2, tempData] = await fetchUserStatus();
+
     fetchUserStatus()
       .then((data) => {
         return analyzeUserStatus(data);
@@ -246,24 +249,19 @@ const HomePage = (props) => {
           solvedFreq,
         ]) => {
           setLanguage(langName);
-          setFreqLanguage(langFreq);
-
           setVerdict(verdName);
-          setFreqVerdict(verdFreq);
-
           setTags(tags);
-          setFreqTags(tagsFreq);
-
           setProblemRating(problemRating);
-          setFreqProblemRating(problemRatingFreq);
-
           setProblemLevel(problemLevel);
-          setFreqProblemLevel(problemLevelFreq);
-
           setAttempt(tried);
-          setFreqAttempt(triedFreq);
-
           setSolve(solved);
+
+          setFreqLanguage(langFreq);
+          setFreqVerdict(verdFreq);
+          setFreqTags(tagsFreq);
+          setFreqProblemRating(problemRatingFreq);
+          setFreqProblemLevel(problemLevelFreq);
+          setFreqAttempt(triedFreq);
           setFreqsolve(solvedFreq);
         }
       )
@@ -283,22 +281,26 @@ const HomePage = (props) => {
         <>
           <UserData>
             <div className="flex space-x-4">
-              <UserTable
-                name={props.userName}
-                totalContest={contestName.length}
-                maxRating={maxRating}
-                minRating={minRating}
-                maxUp={maxUp}
-                maxDown={maxDown}
-              />
-              <UserStatusTable
-                name={props.userName}
-                tried={attempt.length}
-                solved={solve.length}
-                maxRating={maxRating}
-                minRating={minRating}
-                maxUp={maxUp}
-              />
+              <Table>
+                <UserTable
+                  name={props.userName}
+                  totalContest={contestName.length}
+                  maxRating={maxRating}
+                  minRating={minRating}
+                  maxUp={maxUp}
+                  maxDown={maxDown}
+                />
+              </Table>
+              <Table>
+                <UserStatusTable
+                  name={props.userName}
+                  tried={attempt.length}
+                  solved={solve.length}
+                  maxRating={maxRating}
+                  minRating={minRating}
+                  maxUp={maxUp}
+                />
+              </Table>
             </div>
             <Pi>
               <PiChart xAxis={language} yAxis={freqLanguage} />
@@ -314,6 +316,9 @@ const HomePage = (props) => {
             </Graph>
             <Graph>
               <Chart xAxis={problemLevel} yAxis={freqProblemLevel} />
+            </Graph>
+            <Graph>
+              <LineChart xAxis={contestName} yAxis={newRating} />
             </Graph>
           </UserData>
         </>
