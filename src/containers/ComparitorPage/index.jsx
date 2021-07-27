@@ -5,6 +5,7 @@ import tw from "twin.macro";
 import UserPage from "../UserPage/index.jsx";
 import Colors from "../../colorScheme/index.jsx";
 import UnderConstructionGIF from "../../gif/Untitled.gif";
+import Graph from "../../components/comparitorData/barGraph.jsx";
 
 const MainPage = styled.div`
   ${tw`
@@ -24,12 +25,270 @@ const MainPage = styled.div`
   background-color: ${Colors.body};
 `;
 
-const analyzeUserStatus = (data) => {};
-const fetchUserStatus = () => {};
 const Comparitor = (props) => {
+  const [loading, setLoading] = useState(true);
+  const [user1, setUser1] = useState({
+    rank: [],
+    oldRating: [],
+    newRating: [],
+    contestName: [],
+    maxRating: [],
+    minRating: [],
+    maxUp: 0,
+    maxDown: 0,
+
+    language: [],
+    verdict: [],
+    tags: [],
+    problemRating: [],
+    problemLevel: [],
+    attempt: [],
+    solve: [],
+
+    freqLanguage: [],
+    freqVerdict: [],
+    freqTags: [],
+    freqProblemRating: [],
+    freqProblemLevel: [],
+    freqAttempt: [],
+    freqSolve: [],
+  });
+  const [user2, setUser2] = useState({
+    rank: [],
+    oldRating: [],
+    newRating: [],
+    contestName: [],
+    maxRating: [],
+    minRating: [],
+    maxUp: 0,
+    maxDown: 0,
+
+    language: [],
+    verdict: [],
+    tags: [],
+    problemRating: [],
+    problemLevel: [],
+    attempt: [],
+    solve: [],
+
+    freqLanguage: [],
+    freqVerdict: [],
+    freqTags: [],
+    freqProblemRating: [],
+    freqProblemLevel: [],
+    freqAttempt: [],
+    freqSolve: [],
+  });
+
+  const fetchUserStatusOne = () => {
+    const data = axios(
+      `https://codeforces.com/api/user.status?handle=${props.handle1}`
+    );
+    return data;
+  };
+  const fetchUserStatusTwo = () => {
+    const data = axios(
+      `https://codeforces.com/api/user.status?handle=${props.handle2}`
+    );
+    return data;
+  };
+
+  const fillInMap = (userMap, value) => {
+    userMap[value] ? (userMap[value] += 1) : (userMap[value] = 1);
+  };
+
+  const mapToArray = (userMap, userArr, userArrFreq) => {
+    for (let val in userMap) {
+      userArr.push(val);
+      userArrFreq.push(userMap[val]);
+    }
+  };
+
+  const analyzeUserStatus = (data) => {
+    const userLanguage = new Map();
+    const userVerdict = new Map();
+    const userTags = new Map();
+    const userProblemRating = new Map();
+    const userProblemLevel = new Map();
+    const userAttemptedProblem = new Map();
+    const userSolvedProblem = new Map();
+
+    data.data.result.map((key) => {
+      fillInMap(userVerdict, key.verdict);
+      fillInMap(userAttemptedProblem, key.problem.name);
+      if (key.verdict == "OK") {
+        fillInMap(userSolvedProblem, key.problem.name);
+        fillInMap(userLanguage, key.programmingLanguage);
+        fillInMap(userProblemRating, key.problem.rating);
+        fillInMap(userProblemLevel, key.problem.index);
+        for (let tag of key.problem.tags) {
+          fillInMap(userTags, tag);
+        }
+      }
+    });
+
+    const langName = [],
+      langFreq = [],
+      verdName = [],
+      verdFreq = [],
+      tags = [],
+      tagsFreq = [],
+      problemRating = [],
+      problemRatingFreq = [],
+      problemLevel = [],
+      problemLevelFreq = [],
+      tried = [],
+      triedFreq = [],
+      solved = [],
+      solvedFreq = [];
+
+    mapToArray(userVerdict, verdName, verdFreq);
+    mapToArray(userLanguage, langName, langFreq);
+    mapToArray(userTags, tags, tagsFreq);
+    mapToArray(userProblemRating, problemRating, problemRatingFreq);
+    mapToArray(userProblemLevel, problemLevel, problemLevelFreq);
+    mapToArray(userAttemptedProblem, tried, triedFreq);
+    mapToArray(userSolvedProblem, solved, solvedFreq);
+
+    return [
+      langName,
+      langFreq,
+      verdName,
+      verdFreq,
+      tags,
+      tagsFreq,
+      problemRating,
+      problemRatingFreq,
+      problemLevel,
+      problemLevelFreq,
+      tried,
+      triedFreq,
+      solved,
+      solvedFreq,
+    ];
+  };
+
+  useEffect(() => {
+    fetchUserStatusOne()
+      .then((data) => {
+        return analyzeUserStatus(data);
+      })
+      .then(
+        ([
+          langName,
+          langFreq,
+          verdName,
+          verdFreq,
+          tags,
+          tagsFreq,
+          problemRating,
+          problemRatingFreq,
+          problemLevel,
+          problemLevelFreq,
+          tried,
+          triedFreq,
+          solved,
+          solvedFreq,
+        ]) => {
+          let obj = {
+            rank: [],
+            oldRating: [],
+            newRating: [],
+            contestName: [],
+            maxRating: [],
+            minRating: [],
+            maxUp: 0,
+            maxDown: 0,
+
+            language: langName,
+            verdict: verdName,
+            tags: tags,
+            problemRating: problemRating,
+            problemLevel: problemLevel,
+            attempt: tried,
+            solve: solved,
+
+            freqLanguage: langFreq,
+            freqVerdict: verdFreq,
+            freqTags: tagsFreq,
+            freqProblemRating: problemRatingFreq,
+            freqProblemLevel: problemLevelFreq,
+            freqAttempt: triedFreq,
+            freqSolve: solvedFreq,
+          };
+          setUser1(obj);
+        }
+      );
+    fetchUserStatusTwo()
+      .then((data) => {
+        return analyzeUserStatus(data);
+      })
+      .then(
+        ([
+          langName,
+          langFreq,
+          verdName,
+          verdFreq,
+          tags,
+          problemRating,
+          tagsFreq,
+          problemRatingFreq,
+          problemLevel,
+          problemLevelFreq,
+          tried,
+          triedFreq,
+          solved,
+          solvedFreq,
+        ]) => {
+          let obj = {
+            rank: [],
+            oldRating: [],
+            newRating: [],
+            contestName: [],
+            maxRating: [],
+            minRating: [],
+            maxUp: 0,
+            maxDown: 0,
+
+            language: langName,
+            verdict: verdName,
+            tags: tags,
+            problemRating: problemRating,
+            problemLevel: problemLevel,
+            attempt: tried,
+            solve: solved,
+
+            freqLanguage: langFreq,
+            freqVerdict: verdFreq,
+            freqTags: tagsFreq,
+            freqProblemRating: problemRatingFreq,
+            freqProblemLevel: problemLevelFreq,
+            freqAttempt: triedFreq,
+            freqSolve: solvedFreq,
+          };
+          setUser2(obj);
+          console.log(obj);
+        }
+      )
+      .then(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <MainPage>
-      <img src={UnderConstructionGIF} className="rounded-3xl" />
+      {loading ? (
+        <img src={UnderConstructionGIF} className="rounded-3xl" />
+      ) : (
+        <>
+          <h1> Data aagya, daTa aagya</h1>
+          <Graph
+            xAxis={user1.problemRating}
+            yAxis1={user1.freqProblemRating}
+            yAxis2={user2.freqProblemRating}
+          />
+        </>
+      )}
     </MainPage>
   );
 };
