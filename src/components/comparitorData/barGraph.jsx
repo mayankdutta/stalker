@@ -3,10 +3,6 @@ import { Bar } from "react-chartjs-2";
 import Colors from "../../colorScheme/index.jsx";
 
 const Data = (props) => {
-  console.log("DATa");
-  console.log(props.xAxis);
-  console.log(props.yAxis1);
-  console.log(props.yAxis2);
   return (
     <>
       <Bar

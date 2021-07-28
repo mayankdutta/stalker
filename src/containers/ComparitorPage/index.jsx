@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import tw from "twin.macro";
-import UserPage from "../UserPage/index.jsx";
 import Colors from "../../colorScheme/index.jsx";
 import UnderConstructionGIF from "../../gif/Untitled.gif";
 import Graph from "../../components/comparitorData/barGraph.jsx";
@@ -185,7 +184,6 @@ const Comparitor = (props) => {
       })
       .then((obj) => {
         setUser1(obj);
-        console.log(obj);
       });
 
     fetchUserStatusTwo()
@@ -194,7 +192,6 @@ const Comparitor = (props) => {
       })
       .then((obj) => {
         setUser2(obj);
-        console.log(obj);
       })
       .then(() => {
         setLoading(false);
@@ -207,11 +204,20 @@ const Comparitor = (props) => {
         <img src={UnderConstructionGIF} className="rounded-3xl" />
       ) : (
         <>
-          <h1> Data aagya, daTa aagya</h1>
           <Graph
             xAxis={user1.problemRating}
             yAxis1={user1.freqProblemRating}
             yAxis2={user2.freqProblemRating}
+          />
+          <Graph
+            xAxis={user1.problemLevel}
+            yAxis1={user1.freqProblemLevel}
+            yAxis2={user2.freqProblemLevel}
+          />
+          <Graph
+            xAxis={user1.tags}
+            yAxis1={user1.freqTags}
+            yAxis2={user2.freqTags}
           />
         </>
       )}
