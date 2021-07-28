@@ -5,6 +5,8 @@ import Colors from "../../colorScheme/index.jsx";
 const Data = (props) => {
   console.log("DATa");
   console.log(props.xAxis);
+  console.log(props.yAxis1);
+  console.log(props.yAxis2);
   return (
     <>
       <Bar
@@ -13,7 +15,7 @@ const Data = (props) => {
           labels: props.xAxis,
           datasets: [
             {
-              label: "No. of Problems",
+              label: "curse",
               // data: [100, 200, 300, 400, 500, 600],
               data: props.yAxis1,
               backgroundColor: "rgb(255, 99, 132)",
@@ -22,7 +24,7 @@ const Data = (props) => {
               borderColor: "black",
             },
             {
-              label: "No. of Problems",
+              label: "babu",
               // data: [100, 200, 300, 400, 500, 600],
               data: props.yAxis2,
               backgroundColor: "rgb(54, 162, 235)",

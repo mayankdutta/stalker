@@ -163,7 +163,7 @@ const HomePage = () => {
               </button>
             </div>
           </Content>
-          <Comparitor user1={handle1} user2={handle2} />
+          <Comparitor handle1={handle1} handle2={handle2} />
         </>
       )}
     </>

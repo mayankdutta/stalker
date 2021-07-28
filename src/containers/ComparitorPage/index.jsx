@@ -150,22 +150,32 @@ const Comparitor = (props) => {
     mapToArray(userAttemptedProblem, tried, triedFreq);
     mapToArray(userSolvedProblem, solved, solvedFreq);
 
-    return [
-      langName,
-      langFreq,
-      verdName,
-      verdFreq,
-      tags,
-      tagsFreq,
-      problemRating,
-      problemRatingFreq,
-      problemLevel,
-      problemLevelFreq,
-      tried,
-      triedFreq,
-      solved,
-      solvedFreq,
-    ];
+    return {
+      rank: [],
+      oldRating: [],
+      newRating: [],
+      contestName: [],
+      maxRating: [],
+      minRating: [],
+      maxUp: 0,
+      maxDown: 0,
+
+      language: langName,
+      verdict: verdName,
+      tags: tags,
+      problemRating: problemRating,
+      problemLevel: problemLevel,
+      attempt: tried,
+      solve: solved,
+
+      freqLanguage: langFreq,
+      freqVerdict: verdFreq,
+      freqTags: tagsFreq,
+      freqProblemRating: problemRatingFreq,
+      freqProblemLevel: problemLevelFreq,
+      freqAttempt: triedFreq,
+      freqSolve: solvedFreq,
+    };
   };
 
   useEffect(() => {
@@ -173,103 +183,19 @@ const Comparitor = (props) => {
       .then((data) => {
         return analyzeUserStatus(data);
       })
-      .then(
-        ([
-          langName,
-          langFreq,
-          verdName,
-          verdFreq,
-          tags,
-          tagsFreq,
-          problemRating,
-          problemRatingFreq,
-          problemLevel,
-          problemLevelFreq,
-          tried,
-          triedFreq,
-          solved,
-          solvedFreq,
-        ]) => {
-          let obj = {
-            rank: [],
-            oldRating: [],
-            newRating: [],
-            contestName: [],
-            maxRating: [],
-            minRating: [],
-            maxUp: 0,
-            maxDown: 0,
+      .then((obj) => {
+        setUser1(obj);
+        console.log(obj);
+      });
 
-            language: langName,
-            verdict: verdName,
-            tags: tags,
-            problemRating: problemRating,
-            problemLevel: problemLevel,
-            attempt: tried,
-            solve: solved,
-
-            freqLanguage: langFreq,
-            freqVerdict: verdFreq,
-            freqTags: tagsFreq,
-            freqProblemRating: problemRatingFreq,
-            freqProblemLevel: problemLevelFreq,
-            freqAttempt: triedFreq,
-            freqSolve: solvedFreq,
-          };
-          setUser1(obj);
-        }
-      );
     fetchUserStatusTwo()
       .then((data) => {
         return analyzeUserStatus(data);
       })
-      .then(
-        ([
-          langName,
-          langFreq,
-          verdName,
-          verdFreq,
-          tags,
-          problemRating,
-          tagsFreq,
-          problemRatingFreq,
-          problemLevel,
-          problemLevelFreq,
-          tried,
-          triedFreq,
-          solved,
-          solvedFreq,
-        ]) => {
-          let obj = {
-            rank: [],
-            oldRating: [],
-            newRating: [],
-            contestName: [],
-            maxRating: [],
-            minRating: [],
-            maxUp: 0,
-            maxDown: 0,
-
-            language: langName,
-            verdict: verdName,
-            tags: tags,
-            problemRating: problemRating,
-            problemLevel: problemLevel,
-            attempt: tried,
-            solve: solved,
-
-            freqLanguage: langFreq,
-            freqVerdict: verdFreq,
-            freqTags: tagsFreq,
-            freqProblemRating: problemRatingFreq,
-            freqProblemLevel: problemLevelFreq,
-            freqAttempt: triedFreq,
-            freqSolve: solvedFreq,
-          };
-          setUser2(obj);
-          console.log(obj);
-        }
-      )
+      .then((obj) => {
+        setUser2(obj);
+        console.log(obj);
+      })
       .then(() => {
         setLoading(false);
       });
