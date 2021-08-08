@@ -9,6 +9,8 @@ const Data = (props) => {
         data={{
           // labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
           labels: props.xAxis,
+          responsive: false,
+
           datasets: [
             {
               label: "No. of Problems",

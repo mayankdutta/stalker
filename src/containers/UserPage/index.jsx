@@ -78,6 +78,7 @@ const HomePage = (props) => {
   const [problemLevel, setProblemLevel] = useState([]);
   const [attempt, setAttempt] = useState([]);
   const [solve, setSolve] = useState([]);
+  const [unsolve, setUnsolve] = useState([]);
 
   const [freqLanguage, setFreqLanguage] = useState([]);
   const [freqVerdict, setFreqVerdict] = useState([]);
@@ -86,6 +87,7 @@ const HomePage = (props) => {
   const [freqProblemLevel, setFreqProblemLevel] = useState([]);
   const [freqAttempt, setFreqAttempt] = useState([]);
   const [freqSolve, setFreqsolve] = useState([]);
+  const [freqUnsolve, setFreqUnsolve] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -121,6 +123,7 @@ const HomePage = (props) => {
     const userProblemLevel = new Map();
     const userAttemptedProblem = new Map();
     const userSolvedProblem = new Map();
+    const userUnsolvedProblem = new Map();
 
     data.data.result.map((key) => {
       fillInMap(userVerdict, key.verdict);
@@ -133,6 +136,13 @@ const HomePage = (props) => {
         for (let tag of key.problem.tags) {
           fillInMap(userTags, tag);
         }
+        if (userUnsolvedProblem[key.problem.name])
+          userUnsolvedProblem[key.problem.name] = 0;
+      } else {
+        if (!userSolvedProblem[key.problem.name])
+          userUnsolvedProblem[key.problem.name] = key.problem.rating;
+        else if (userSolvedProblem[key.problem.name] != 0)
+          userUnsolvedProblem[key.problem.name] = key.problem.rating;
       }
     });
 
@@ -149,7 +159,9 @@ const HomePage = (props) => {
       tried = [],
       triedFreq = [],
       solved = [],
-      solvedFreq = [];
+      solvedFreq = [],
+      unsolved = [],
+      unsolvedFreq = [];
 
     mapToArray(userVerdict, verdName, verdFreq);
     mapToArray(userLanguage, langName, langFreq);
