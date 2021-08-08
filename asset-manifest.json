@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.6c7c39f4.chunk.css",
-    "main.js": "/static/js/main.28a4868a.chunk.js",
-    "main.js.map": "/static/js/main.28a4868a.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.74ea85bc.js",
-    "runtime-main.js.map": "/static/js/runtime-main.74ea85bc.js.map",
-    "static/js/2.65171574.chunk.js": "/static/js/2.65171574.chunk.js",
-    "static/js/2.65171574.chunk.js.map": "/static/js/2.65171574.chunk.js.map",
-    "static/js/3.fbe41530.chunk.js": "/static/js/3.fbe41530.chunk.js",
-    "static/js/3.fbe41530.chunk.js.map": "/static/js/3.fbe41530.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/main.6c7c39f4.chunk.css.map": "/static/css/main.6c7c39f4.chunk.css.map",
-    "static/js/2.65171574.chunk.js.LICENSE.txt": "/static/js/2.65171574.chunk.js.LICENSE.txt",
-    "static/media/LD1.c22daf7e.gif": "/static/media/LD1.c22daf7e.gif",
-    "static/media/Untitled.0fd091a7.gif": "/static/media/Untitled.0fd091a7.gif",
-    "static/media/waiting.a7670ed8.gif": "/static/media/waiting.a7670ed8.gif"
+    "main.css": "/stalker/static/css/main.6c7c39f4.chunk.css",
+    "main.js": "/stalker/static/js/main.821e8561.chunk.js",
+    "main.js.map": "/stalker/static/js/main.821e8561.chunk.js.map",
+    "runtime-main.js": "/stalker/static/js/runtime-main.9ae122cc.js",
+    "runtime-main.js.map": "/stalker/static/js/runtime-main.9ae122cc.js.map",
+    "static/js/2.bf4e320f.chunk.js": "/stalker/static/js/2.bf4e320f.chunk.js",
+    "static/js/2.bf4e320f.chunk.js.map": "/stalker/static/js/2.bf4e320f.chunk.js.map",
+    "static/js/3.6188b03c.chunk.js": "/stalker/static/js/3.6188b03c.chunk.js",
+    "static/js/3.6188b03c.chunk.js.map": "/stalker/static/js/3.6188b03c.chunk.js.map",
+    "index.html": "/stalker/index.html",
+    "static/css/main.6c7c39f4.chunk.css.map": "/stalker/static/css/main.6c7c39f4.chunk.css.map",
+    "static/js/2.bf4e320f.chunk.js.LICENSE.txt": "/stalker/static/js/2.bf4e320f.chunk.js.LICENSE.txt",
+    "static/media/LD1.c22daf7e.gif": "/stalker/static/media/LD1.c22daf7e.gif",
+    "static/media/Untitled.0fd091a7.gif": "/stalker/static/media/Untitled.0fd091a7.gif",
+    "static/media/waiting.a7670ed8.gif": "/stalker/static/media/waiting.a7670ed8.gif"
   },
   "entrypoints": [
-    "static/js/runtime-main.74ea85bc.js",
-    "static/js/2.65171574.chunk.js",
+    "static/js/runtime-main.9ae122cc.js",
+    "static/js/2.bf4e320f.chunk.js",
     "static/css/main.6c7c39f4.chunk.css",
-    "static/js/main.28a4868a.chunk.js"
+    "static/js/main.821e8561.chunk.js"
   ]
 }
